@@ -15,6 +15,8 @@
         "05b": "node exercises/05b-structured-data/index.js",
         "06": "node exercises/06-prompt-eval-dataset/index.js",
         "07": "node exercises/07-prompt-eval-run-eval/index.js",
+        "08": "node exercises/08-prompt-eval-modelGrader/index.js",
+        "08b": "node exercises/08b-prompt-eval-codeGrader/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
