@@ -6,10 +6,11 @@ dist/
 
 # generated exercise output (regenerated fresh by that exercise's own script)
 exercises/06-prompt-eval-dataset/dataset.json
+exercises/08-prompt-eval-modelGrader/dataset.json
 exercises/08b-prompt-eval-codeGrader/dataset.json
 
-# NOTE: 07/08's dataset.json are static copies of 06's output, not something their
-# own scripts regenerate — they're committed as fixtures so those exercises can run
+# NOTE: 07's dataset.json is a static copy of 06's output, not something its own
+# script regenerates — it's committed as a fixture so that exercise can run
 # standalone right after a clone, without needing 06 run first.
 
 # personal local Claude Code permissions, not shared project config

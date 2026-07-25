@@ -4,6 +4,14 @@ Builds on [08's model grader](../08-prompt-eval-modelGrader/model-grading.md)
 by adding the other two criteria the course identified: format and syntax
 validity, both handled by plain code rather than a Claude call.
 
+`generateDataset()` and `gradeByModel` here use the same `chatJson` helper
+introduced in 08 — see
+[08's notes on `chatJson`](../08-prompt-eval-modelGrader/model-grading.md#chatjson-prefilled-json-isnt-guaranteed-to-actually-be-valid-json)
+for why prefilled JSON needs sanitizing before `JSON.parse`, not just
+retrying. It's the same fragility here: a code grader response discussing
+a regex-format task's weaknesses is just as likely to embed an
+unescaped backslash as 08's model grader is.
+
 ## Why format/syntax don't need a model
 
 "Does this parse as valid Python/JSON/regex" has one correct answer,

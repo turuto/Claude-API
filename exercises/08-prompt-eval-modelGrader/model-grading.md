@@ -34,8 +34,20 @@ format/syntax checks arrive in 08b.
 async function gradeByModel(testCase, output) {
     const evalPrompt = `You are an expert code reviewer. Evaluate this AI-generated solution.
 
-Task: ${testCase.task}
-Solution: ${output}
+Task:
+<task>
+${testCase.task}
+</task>
+
+Solution to Evaluate:
+<solution>
+${output}
+</solution>
+
+Criteria you should use to evaluate the solution:
+<criteria>
+${testCase.solution_criteria}
+</criteria>
 
 Provide your evaluation as a structured JSON object with:
 - "strengths": An array of 1-3 key strengths
@@ -47,8 +59,7 @@ Provide your evaluation as a structured JSON object with:
     addUserMessage(messages, evalPrompt);
     addAssistantMessage(messages, '```json');
 
-    const evalText = await chat(messages, { stopSequences: ['```'] });
-    return JSON.parse(evalText);
+    return chatJson(messages, { stopSequences: ['```'] });
 }
 ````
 
@@ -57,6 +68,53 @@ This is a completely separate conversation from `runPrompt`'s — a fresh
 prefill (` ```json `) + stop-sequence (` ``` `) technique used since
 [06's dataset generation](../06-prompt-eval-dataset/generating-test-datasets.md),
 trapping the reply to a clean JSON object.
+
+## Why `<task>`, `<solution>`, and `<criteria>` all get their own tags
+
+The prompt hands the grader three different pieces of text back to back —
+the original task, the output being judged, and the rubric to judge it
+against. Left as plain labeled paragraphs, a long or code-heavy `output`
+(which may itself contain the words "task" or "criteria" in a comment or
+string) could blur where one section ends and the next begins. Wrapping
+each in its own XML tag (`<task>`, `<solution>`, `<criteria>`) removes that
+ambiguity — Claude reliably treats XML tags as structural delimiters, not
+as content to interpret, so `<criteria>{testCase.solution_criteria}</criteria>`
+is unambiguously "the rubric," never mistakable for part of the solution
+being graded even if the solution's own text is messy or adversarial. This
+is the same "structuring with XML tags" technique named in
+[06's overview notes](../06-prompt-eval-dataset/prompt-evaluation-overview.md) —
+applied here to the grading prompt rather than the task prompt.
+
+## Giving the grader a reference point: `solution_criteria`
+
+Without anything to check against, "how good is this?" is a vague question
+even for a careful grader — it ends up judging general code quality
+instead of whether _this task_ was actually solved. `generateDataset()`'s
+prompt now asks for a `solution_criteria` field per test case, alongside
+`task`:
+
+```js
+const DATASET_PROMPT = `...
+Example output:
+\`\`\`json
+[
+  {
+    "task": "Description of task",
+    "solution_criteria": "What a correct solution to this task must include"
+  },
+  ...
+]
+\`\`\`
+...
+* "solution_criteria" should be concrete and checkable, not vague praise like "well-written"
+...`;
+```
+
+That criteria then flows straight into the grading prompt above. This
+exercise generates its own dataset for that reason — 07's static
+`dataset.json` (bare `task` only) doesn't carry `solution_criteria`, so
+this is the first exercise in the arc since 06 to call `generateDataset()`
+itself rather than reading a committed fixture.
 
 ## Why ask for strengths/weaknesses/reasoning, not just a score
 
@@ -95,6 +153,61 @@ JS has no `statistics.mean` built in, so this is the one-line
 `reduce`-based equivalent. `runEval` prints this average across all test
 cases — the single number that makes two prompt versions comparable, per
 [06's overview notes](../06-prompt-eval-dataset/prompt-evaluation-overview.md).
+
+## `chatJson`: prefilled JSON isn't guaranteed to actually be valid JSON
+
+`generateDataset()` and `gradeByModel` both prefill ` ```json ` and hand
+the result straight to `JSON.parse`, but that reply is still model output —
+nothing stops Claude from writing a string that JSON.parse rejects. In
+practice this happens _often_ when a test case discusses a regex pattern:
+grading a case like "write a regex for an IAM role ARN," the grader's own
+`weaknesses`/`reasoning` text tends to quote that regex verbatim —
+backslashes and all — without doubling them the way a JSON string value
+requires. `\d{12}` typed directly into a JSON string is invalid; it needs
+to be `\\d{12}`.
+
+Because this is a systematic tendency (the model consistently makes the
+same mistake when the content itself invites it), retrying alone doesn't
+reliably fix it — a fresh sample can hit the exact same slip. The real fix
+is sanitizing the response before parsing:
+
+```js
+function escapeStrayBackslashes(text) {
+    return text.replace(/\\["\\/bfnrtu]|\\/g, (match) => (match.length === 2 ? match : '\\\\'));
+}
+
+async function chatJson(messages, chatOptions, retries = 2) {
+    for (let attempt = 1; ; attempt++) {
+        const text = await chat(messages, chatOptions);
+        try {
+            return JSON.parse(escapeStrayBackslashes(text));
+        } catch (err) {
+            if (attempt > retries) throw err;
+        }
+    }
+}
+```
+
+The regex alternation matters: `\\["\\/bfnrtu]` matches a backslash
+_together with_ the character right after it whenever that pair is already
+a valid JSON escape (`\"`, `\\`, `\/`, `\b`, `\f`, `\n`, `\r`, `\t`, or the
+start of `\uXXXX`), consuming both characters as one unit so the scan
+doesn't loop back and reinterpret the second character of a valid pair as
+a stray backslash of its own. Only a backslash that _doesn't_ pair up this
+way falls through to the second alternative and gets escaped. An earlier
+version of this used a negative-lookahead (`\\(?!["\\/bfnrtu])`) instead —
+it looked simpler, but scans one character at a time and has no memory of
+"I already matched this backslash as part of a pair," so it incorrectly
+flagged the second backslash of an already-valid `\\` escape as if it were
+a fresh one, corrupting perfectly valid JSON. Matching pairs atomically is
+what fixes that.
+
+This is still an external-API boundary — the retry loop (resample a fresh
+completion) stays as a backstop for whatever _other_ way a model response
+could fail to parse, but the sanitization step is what actually resolves
+the recurring backslash case. `chatJson` replaces the bare
+`chat(...)` + `JSON.parse(...)` pairing everywhere this exercise parses a
+model's JSON reply.
 
 ## Model graders are noisy, not oracles
 

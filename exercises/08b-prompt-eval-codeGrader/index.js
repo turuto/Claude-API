@@ -36,6 +36,28 @@ async function chat(messages, { system, temperature = 1.0, stopSequences } = {})
         .join('\n');
 }
 
+// Prefilled JSON replies aren't guaranteed to actually be valid JSON. This one is a
+// recurring, not just occasional, failure mode: when a case discusses a regex pattern
+// (e.g. in "weaknesses" or "reasoning"), Claude tends to quote it verbatim — backslashes
+// and all — without doubling them for JSON, so retrying alone often reproduces the same
+// break. Escaping any backslash JSON wouldn't accept as-is (leaving already-valid escapes
+// like \" or \n untouched) fixes that class outright; the retry loop is a backstop for
+// whatever else can go wrong at this external-API boundary.
+function escapeStrayBackslashes(text) {
+    return text.replace(/\\["\\/bfnrtu]|\\/g, (match) => (match.length === 2 ? match : '\\\\'));
+}
+
+async function chatJson(messages, chatOptions, retries = 2) {
+    for (let attempt = 1; ; attempt++) {
+        const text = await chat(messages, chatOptions);
+        try {
+            return JSON.parse(escapeStrayBackslashes(text));
+        } catch (err) {
+            if (attempt > retries) throw err;
+        }
+    }
+}
+
 // Same technique as 06-prompt-eval-dataset, plus a "format" field per task so the code
 // grader below knows which validator to run against each response.
 const DATASET_PROMPT = `Generate an evaluation dataset for a prompt evaluation. The dataset will be used
@@ -64,9 +86,7 @@ async function generateDataset() {
     addUserMessage(messages, DATASET_PROMPT);
     addAssistantMessage(messages, '```json');
 
-    const text = await chat(messages, { stopSequences: ['```'] });
-
-    return JSON.parse(text);
+    return chatJson(messages, { stopSequences: ['```'] });
 }
 
 // Tightened from 08's bare template: naming the exact output formats and banning
@@ -103,8 +123,7 @@ Provide your evaluation as a structured JSON object with:
     addUserMessage(messages, evalPrompt);
     addAssistantMessage(messages, '```json');
 
-    const evalText = await chat(messages, { stopSequences: ['```'] });
-    return JSON.parse(evalText);
+    return chatJson(messages, { stopSequences: ['```'] });
 }
 
 function validateJson(text) {
