@@ -1,0 +1,44 @@
+{
+    "name": "api-course",
+    "version": "1.0.0",
+    "description": "JavaScript exercises following Anthropic's Building with the Claude API course",
+    "main": "index.js",
+    "scripts": {
+        "00-hello": "node exercises/00-hello-claude/index.js",
+        "01-user-input": "node exercises/01-user-input/index.js",
+        "02-conversation": "node exercises/02-conversation/index.js",
+        "02-conversation-claude": "node exercises/02-conversation-claude/index.js",
+        "03-system-prompts": "node exercises/03-system-prompts/index.js",
+        "04-response-streaming": "node exercises/04-response-streaming/index.js",
+        "04b-response-streaming": "node exercises/04b-response-streaming/index.js",
+        "05-structured-data": "node exercises/05-structured-data/index.js",
+        "05b-structured-data": "node exercises/05b-structured-data/index.js",
+        "06-test-dataset": "node exercises/06-test-dataset/index.js",
+        "format": "prettier --write ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "eslintConfig": {
+        "parserOptions": {
+            "ecmaVersion": 2022,
+            "sourceType": "module"
+        },
+        "rules": {
+            "max-len": [
+                "error",
+                {
+                    "code": 120
+                }
+            ]
+        }
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.113.0",
+        "dotenv": "^17.4.2"
+    },
+    "devDependencies": {
+        "prettier": "^3.9.6"
+    }
+}
