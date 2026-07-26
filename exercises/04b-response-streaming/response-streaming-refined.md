@@ -20,7 +20,7 @@ with client.messages.stream(
 ```
 
 Same underlying API call and same `messages`/`addUserMessage` setup as 04 —
-this file is about the differences in how the *response* is consumed.
+this file is about the differences in how the _response_ is consumed.
 
 ## Correction: this ended up being the same code as 04, and that's correct
 
@@ -83,5 +83,5 @@ left are minor:
 - **`get_final_message()` is a Promise in JS.** Python calls it as a plain
   method after the `with` block finishes; JS's `finalMessage()` returns a
   `Promise`, so it's `await`ed: `const finalMessage = await
-  stream.finalMessage();`. Same purpose either way — the full `Message`,
+stream.finalMessage();`. Same purpose either way — the full `Message`,
   useful for persisting the completed response once streaming is done.

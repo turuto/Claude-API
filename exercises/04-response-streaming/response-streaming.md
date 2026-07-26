@@ -3,7 +3,7 @@
 ## Theory
 
 Without streaming, `client.messages.create(...)` blocks until Claude has
-generated the *entire* reply, then hands it back as one `Message` object.
+generated the _entire_ reply, then hands it back as one `Message` object.
 Streaming instead opens a connection where the server pushes small chunks
 ("events") as the response is generated, so you can start displaying text
 before generation has finished.
@@ -49,10 +49,10 @@ message_stop
   Its type (`text`, `thinking`, `tool_use`, ...) is decided here.
 - `content_block_delta` — the actual incremental payload for the current
   block. Its shape depends on what kind of block is streaming:
-  - `text_delta` — a chunk of visible reply text
-  - `thinking_delta` / `signature_delta` — extended-thinking output
-  - `input_json_delta` — a chunk of a tool call's JSON arguments
-  - `citations_delta` — a citation attached to text
+    - `text_delta` — a chunk of visible reply text
+    - `thinking_delta` / `signature_delta` — extended-thinking output
+    - `input_json_delta` — a chunk of a tool call's JSON arguments
+    - `citations_delta` — a citation attached to text
 - `content_block_stop` — the current block is complete.
 - `message_delta` — top-level fields that only firm up at the end, like
   `stop_reason` and final `usage` counts.

@@ -22,9 +22,9 @@ const messages = [];
 messages.push({ role: 'user', content: userInput });
 
 const response = await client.messages.create({
-  model: 'claude-haiku-4-5-20251001',
-  max_tokens: 1024,
-  messages,
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1024,
+    messages,
 });
 
 messages.push({ role: 'assistant', content: assistantText });

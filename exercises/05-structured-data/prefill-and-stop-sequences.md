@@ -20,16 +20,16 @@ response directly — you'd have to strip the fence and the prose first.
 
 ## The technique: prefill the fence open, stop it closed
 
-```js
+````js
 const messages = [];
 addUserMessage(messages, 'Generate a very short event bridge rule as json');
 addAssistantMessage(messages, '```json');
 
 const text = await chat(messages, ['```']);
-```
+````
 
 - The user turn states the request as normal.
-- The **assistant** turn is prefilled with `` ```json `` — an opening code
+- The **assistant** turn is prefilled with ` ```json ` — an opening code
   fence with no closing one. Claude continues generation from wherever the
   conversation left off, so it treats the fence as already open and just
   writes the JSON body next, without a leading explanation.
@@ -37,8 +37,8 @@ const text = await chat(messages, ['```']);
   close the fence, which is also right after the content ends. The response
   text is the code-block content and nothing else.
 
-Swapping the fence tag (`` ```json `` vs `` ```csv ``) is enough to steer the
-same technique at a different format — the stop sequence stays `` ``` `` in
+Swapping the fence tag (` ```json ` vs ` ```csv `) is enough to steer the
+same technique at a different format — the stop sequence stays ` ``` ` in
 both cases, since that's the token that closes any fenced block.
 
 ## Model support: this is a legacy technique, not the current one

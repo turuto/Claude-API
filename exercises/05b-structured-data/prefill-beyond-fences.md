@@ -1,7 +1,7 @@
 # Prefilling with a full sentence, not just a fence
 
 Builds on [05 — prefill + stop sequences](../05-structured-data/prefill-and-stop-sequences.md),
-which prefilled the assistant turn with a markdown fence (`` ```json ``) to trap
+which prefilled the assistant turn with a markdown fence (` ```json `) to trap
 generation inside a code block. That's one instance of a more general idea: the
 prefill can be **any** text that makes Claude believe it already started
 responding in a particular shape — not just fence syntax, and not just a short
@@ -9,12 +9,12 @@ marker either.
 
 ## The prefill is a whole sentence
 
-```js
+````js
 addUserMessage('Generate three different sample AWS CLI commands. Each should be very short.');
 addAssistantMessage('Here are all the 3 samples in a single block and with no comments:\n ```bash');
-```
+````
 
-Instead of a bare marker like `` ``` `` or `1.`, the prefill is a full,
+Instead of a bare marker like ` ``` ` or `1.`, the prefill is a full,
 natural-language sentence that asserts its own constraints — "in a single
 block", "with no comments" — followed by an opening fence. Claude continues
 from there as if it already committed to that framing: it writes the
