@@ -17,6 +17,8 @@
         "07": "node exercises/07-prompt-eval-run-eval/index.js",
         "08": "node exercises/08-prompt-eval-modelGrader/index.js",
         "08b": "node exercises/08b-prompt-eval-codeGrader/index.js",
+        "09": "node exercises/09-prompt-engineering/index.js",
+        "09-compare": "node exercises/09-prompt-engineering/compare-baseline.js",
         "format": "prettier --write ."
     },
     "keywords": [],
