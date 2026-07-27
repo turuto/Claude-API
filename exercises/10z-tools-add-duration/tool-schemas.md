@@ -1,15 +1,11 @@
 # Tool schemas
 
-A tool given to Claude is two things: a plain function that does the work,
-and a JSON schema describing it (name, description, `input_schema`) that gets
-passed in the `tools` array on `messages.create`. Claude never runs the
-function itself — it replies with a `tool_use` block naming the tool and the
-arguments it wants to call it with, and the caller is responsible for running
-the matching function and sending the result back as a `tool_result` block.
-That loop isn't wired up yet in this exercise — just the function + schema.
+See [[tool-use-and-schemas]] in `10a-tools-current-datetime` for what a tool
+schema is and why it's structured the way it is — this note only covers
+what's specific to translating *this* tool's schema.
 
-The description in the schema is the only documentation Claude gets for the
-tool. It's worth being as explicit as the lesson's Python version is (unit
+Same as `10a`: the description is the only documentation Claude gets, so
+it's worth being as explicit as the lesson's Python version is (unit
 options, default values, output format) rather than a one-line summary,
 since a vague description is what leads to Claude calling a tool with the
 wrong arguments or not calling it when it should.
