@@ -4,10 +4,10 @@ import { average } from './partials/mathUtils.js';
 import { buildNaiveMealPlanPrompt, buildEngineeredMealPlanPrompt } from './partials/mealPlanPrompts.js';
 
 // Reuses the dataset index.js already generated instead of generating a fresh one — run
-// `npm run 09` first if output/dataset.json doesn't exist yet. Grading both prompts
-// against the exact same test case(s) is what makes the two averages comparable; a fresh
-// dataset per run would risk one prompt facing an easier or harder scenario than the other
-// by chance.
+// `npm run 09c-solution` first if output/dataset.json doesn't exist yet. Grading both
+// prompts against the exact same test case(s) is what makes the two averages comparable;
+// a fresh dataset per run would risk one prompt facing an easier or harder scenario than
+// the other by chance.
 const datasetFile = new URL('output/dataset.json', import.meta.url);
 
 const evaluator = new PromptEvaluator({ maxConcurrentTasks: 1 });

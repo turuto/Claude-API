@@ -8,7 +8,9 @@ dist/
 exercises/06-prompt-eval-dataset/dataset.json
 exercises/08-prompt-eval-modelGrader/dataset.json
 exercises/08b-prompt-eval-codeGrader/dataset.json
-exercises/09-prompt-engineering/output/
+exercises/09a-prompt-engineering/output/
+exercises/09b-process/output/
+exercises/09c-solution/output/
 
 # NOTE: 07's dataset.json is a static copy of 06's output, not something its own
 # script regenerates — it's committed as a fixture so that exercise can run

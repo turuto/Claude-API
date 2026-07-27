@@ -26,41 +26,39 @@ readable. `partials/` splits it by concern instead:
   itself.
 - `promptEvaluator.js` — the `PromptEvaluator` class, which composes all of
   the above.
-- `mealPlanPrompts.js` — the two meal-plan prompt variants
-  (`buildNaiveMealPlanPrompt`/`buildEngineeredMealPlanPrompt`), pulled out
-  of `index.js` so `compare-baseline.js` (see below) can use both without
-  duplicating either.
+
+Notice there's no `mealPlanPrompts.js` here, unlike
+[09c-solution](../09c-solution). The naive prompt is the one thing in this
+exercise you're actually meant to edit, so it's inlined directly in
+`index.js`'s `runPrompt` instead of split into `partials/` — splitting it
+out would only add a file to jump to for something with a single call
+site. 09c-solution keeps its prompts in a partial because it has two
+variants (naive and engineered) with two real consumers (`index.js` and
+`compare-baseline.js`) — a genuine reuse case this exercise doesn't have.
 
 `index.js` is left as just the part of the original notebook you're
-actually meant to edit while doing prompt engineering: instantiate the
-evaluator, generate a dataset, define `runPrompt`, run the evaluation. This
-mirrors 002_prompting_completed.ipynb's own last few cells — the class and
-its helpers are lesson infrastructure, `index.js` is the exercise.
-
-## `compare-baseline.js`
-
-A second, non-`index.js` entry point (`npm run 09-compare`) that runs the
-naive and engineered prompts through the _same_ dataset and grader and
-prints both averages — see
-[iterative-prompt-engineering.md](iterative-prompt-engineering.md#dont-be-discouraged-by-a-low-baseline)
-for what it's demonstrating and a real result. It depends on
-`output/dataset.json` already existing (run `npm run 09` first) rather
-than generating its own, specifically so both prompts are graded against
-identical test cases.
+actually meant to run repeatedly while doing prompt engineering:
+instantiate the evaluator, generate a dataset, define `runPrompt`, run the
+evaluation. This mirrors 002_prompting_completed.ipynb's own last few
+cells — the class and its helpers are lesson infrastructure, `runPrompt`
+in `index.js` is the exercise.
 
 This is still a self-contained exercise folder, not a shared module across
-exercises — `partials/` only exists inside `09-prompt-engineering/` and
+exercises — `partials/` only exists inside `09a-prompt-engineering/` and
 nothing outside this folder imports from it, matching every other
-exercise's independence.
+exercise's independence. [09b-process](../09b-process) and
+[09c-solution](../09c-solution) are separate copies of this same code —
+a working copy and an engineered-prompt reference, respectively — not
+something this folder imports from or is imported by.
 
 ## The `output/` folder
 
-Every file either script generates — `dataset.json`, `output.json`/
-`.html` from `index.js`, `baseline-naive.*`/`baseline-engineered.*` from
-`compare-baseline.js` — is written under `output/` instead of the exercise
-root, so a glance at the folder separates "code you read and edit" from
-"artifacts a run produced." The whole `output/` directory is gitignored;
+Every file `index.js` generates — `dataset.json`, `output.json`/`.html` —
+is written under `output/` instead of the exercise root, so a glance at
+the folder separates "code you read and edit" from "artifacts a run
+produced." The whole `output/` directory is gitignored;
 `PromptEvaluator.generateDataset`/`runEvaluation`
 (`partials/promptEvaluator.js`) create it with `mkdir(..., { recursive:
 true })` before writing, so a fresh clone doesn't need the folder
-pre-created or committed as a placeholder.
+pre-created or committed as a placeholder. 09b-process and 09c-solution
+each get their own `output/` for the same reason.
