@@ -3,36 +3,19 @@
 // response.content is an array of blocks, and this exercise is about reading that array
 // correctly (text vs tool_use) rather than assuming block 0 is always text.
 //
-// Steps 4-5 (actually running the tool and sending its result back) are the next
-// exercise — this one stops at inspecting what Claude asked for.
+// No addUserMessage/addAssistantMessage/chat helpers yet — those hide exactly the thing
+// this exercise is teaching, so message building and the messages.create call are both
+// done by hand here, the same way 02-conversation does it. A tool-aware version of the
+// helpers comes back in a later exercise once the mechanics are familiar.
+//
+// Steps 4-5 (actually running the tool and sending its result back) are also not here
+// yet — this one stops at inspecting what Claude asked for.
 
 import 'dotenv/config';
 import Anthropic from '@anthropic-ai/sdk';
 
+// ANTHROPIC_API_KEY is already loaded into process.env by dotenv/config above.
 const client = new Anthropic();
-const model = 'claude-haiku-4-5-20251001';
-
-function addUserMessage(messages, content) {
-    messages.push({ role: 'user', content });
-}
-
-function addAssistantMessage(messages, content) {
-    messages.push({ role: 'assistant', content });
-}
-
-// Returns the full response (not just text) — reading tool_use blocks needs more than
-// message.content[0].text, which is all earlier exercises' chat() needed.
-async function chat(messages, { tools } = {}) {
-    const params = {
-        model,
-        max_tokens: 1000,
-        messages,
-    };
-    if (tools) {
-        params.tools = tools;
-    }
-    return client.messages.create(params);
-}
 
 // Same tool from 10a-tools-current-datetime, duplicated here since each exercise is
 // self-contained (see CLAUDE.md conventions).
@@ -99,16 +82,24 @@ function logContentBlocks(response) {
 }
 
 // A request that needs the tool: expect a tool_use block, no direct answer yet.
-const dateMessages = [];
-addUserMessage(dateMessages, 'What is the exact current date and time?');
-const dateResponse = await chat(dateMessages, { tools: [getCurrentDatetimeSchema] });
+const dateMessages = [{ role: 'user', content: 'What is the exact current date and time?' }];
+const dateResponse = await client.messages.create({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1000,
+    messages: dateMessages,
+    tools: [getCurrentDatetimeSchema],
+});
 console.log('--- date/time question ---');
 logContentBlocks(dateResponse);
 
 // A request that doesn't need the tool: same tools available, but expect a plain
 // text block and stop_reason "end_turn" — Claude only reaches for tools when relevant.
-const mathMessages = [];
-addUserMessage(mathMessages, 'What is 12 * 7?');
-const mathResponse = await chat(mathMessages, { tools: [getCurrentDatetimeSchema] });
+const mathMessages = [{ role: 'user', content: 'What is 12 * 7?' }];
+const mathResponse = await client.messages.create({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1000,
+    messages: mathMessages,
+    tools: [getCurrentDatetimeSchema],
+});
 console.log('\n--- unrelated question (same tools available) ---');
 logContentBlocks(mathResponse);

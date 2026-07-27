@@ -20,8 +20,12 @@ a tool when it's actually relevant, not just because one's available.
 Earlier exercises' `chat()` helpers returned `message.content[0].text`
 directly, which only worked because they never passed `tools` and text was
 always the sole block. That shortcut breaks here — a response can have a
-`tool_use` block at index 0 with no text block at all — so this exercise's
-`chat()` returns the full response and leaves block-handling to the caller.
+`tool_use` block at index 0 with no text block at all — so this exercise
+skips `addUserMessage`/`addAssistantMessage`/`chat` entirely and calls
+`client.messages.create` directly (same manual style as `02-conversation`),
+to make the block-shaped response impossible to paper over with a helper.
+A tool-aware version of those helpers returns once the mechanics are
+familiar.
 
 This is still only steps 1–3 of [[tool-use-and-schemas]]'s 5-step
 breakdown (write the function, write the schema, call Claude with it).
