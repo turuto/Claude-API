@@ -1,0 +1,15 @@
+{
+    "name": "prompt-standalone",
+    "version": "1.0.0",
+    "description": "Standalone prompt engineering + evaluation demo for the Claude API talk",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.113.0",
+        "dotenv": "^17.4.2"
+    }
+}
