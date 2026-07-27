@@ -23,13 +23,11 @@ const dataset = await evaluator.generateDataset({
 // This is the prompt being tested. Change the text below, then run `npm start`
 // again to see how your edit changes the score.
 function buildPrompt(promptInputs) {
-    return `Write a customer support email reply to the message below.
-<customer-message>
+    return `Reply to this customer in one short sentence.
     - Name: ${promptInputs.customerName}
     - Issue: ${promptInputs.issue}
     - Order details: ${promptInputs.orderDetails}
     - Desired outcome: ${promptInputs.desiredOutcome}
-</customer-message>
 `;
 }
 

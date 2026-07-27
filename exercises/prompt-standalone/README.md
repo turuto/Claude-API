@@ -45,8 +45,12 @@ and each generated output side by side.
    automatically as `output001.html`, `output002.html`, ...) to compare the
    new score against the last run.
 
-Stuck, or want to see one way to improve the starting prompt step by step? See
-[SOLUTION.md](./SOLUTION.md).
+New to prompt engineering, or want a refresher on what to actually try?
+See [THEORY.md](./THEORY.md) for a short summary of the technique with tips
+for good prompting.
+
+Stuck, or want to see those tips applied to this project's own starting
+prompt step by step? See [SOLUTION.md](./SOLUTION.md).
 
 ## How it's built
 
