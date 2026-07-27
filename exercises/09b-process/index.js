@@ -22,7 +22,7 @@ const dataset = await evaluator.generateDataset({
 // change, one change at a time. See exercises/09c-solution for one possible engineered
 // version and a side-by-side comparison against the original naive baseline.
 function buildPrompt(promptInputs) {
-    return `Generate a 1 day meal plan for an athlete that meets the dietary restrictions
+    return `What should this person eat?
 
 - Height: ${promptInputs.height}
 - Weight: ${promptInputs.weight}

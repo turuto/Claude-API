@@ -5,6 +5,7 @@ import { mapWithConcurrency, createProgressLogger } from './concurrency.js';
 import { average } from './mathUtils.js';
 import { buildIdeasPrompt, buildTestCasePrompt, buildEvalPrompt } from './prompts.js';
 import { generatePromptEvaluationReport } from './report.js';
+import { archiveIfExists } from './archive.js';
 
 export class PromptEvaluator {
     constructor({ maxConcurrentTasks = 3 } = {}) {
@@ -84,6 +85,7 @@ export class PromptEvaluator {
 
         await mkdir(new URL('.', jsonOutputFile), { recursive: true });
         await writeFile(jsonOutputFile, JSON.stringify(results, null, 2));
+        await archiveIfExists(htmlOutputFile);
         await writeFile(htmlOutputFile, generatePromptEvaluationReport(results, promptText));
 
         return results;

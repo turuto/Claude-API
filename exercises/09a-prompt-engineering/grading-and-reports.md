@@ -80,3 +80,21 @@ would silently vanish from the rendered page instead of showing up in the
 preview. `escapeHtml` (`&` → `&amp;`, `<` → `&lt;`, `>` → `&gt;`) fixes
 that specifically for `promptText`, without touching the rest of the
 report's existing (documented) non-escaping behavior.
+
+## Archiving the previous report instead of overwriting it
+
+Prompt engineering is inherently a before/after comparison — but
+`runEvaluation` always writes to the same `htmlOutputFile`, so a naive
+overwrite would destroy the previous run's report right when you most want
+to compare it against the new one. `archiveIfExists` (`partials/archive.js`)
+runs immediately before that write: if `output.html` already exists, it's
+renamed to `output001.html` (or `output002.html`, `output003.html`, ... —
+whichever number isn't taken yet) instead of being overwritten, and only
+then does the new run's results become `output.html`.
+
+This is generic over the filename, not hardcoded to `output.html`
+specifically — it works off whatever `htmlOutputFile` URL is passed in, so
+`compare-baseline.js`'s two separate reports each get their own
+independent numbering (`baseline-naive.html` → `baseline-naive001.html`,
+`baseline-engineered.html` → `baseline-engineered001.html`, ...) without
+any special-casing.
