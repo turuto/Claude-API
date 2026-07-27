@@ -29,6 +29,10 @@ async function runEngineeredPrompt(promptInputs) {
     return chat(messages);
 }
 
+// Placeholder values, not a real test case — just so each report can show its prompt
+// template without needing an extra API call to fill it in with real data.
+const placeholderInputs = { height: '{height}', weight: '{weight}', goal: '{goal}', restrictions: '{restrictions}' };
+
 console.log('--- Naive baseline ---');
 const naiveResults = await evaluator.runEvaluation({
     runPromptFunction: runNaivePrompt,
@@ -36,6 +40,7 @@ const naiveResults = await evaluator.runEvaluation({
     extraCriteria,
     jsonOutputFile: new URL('output/baseline-naive.json', import.meta.url),
     htmlOutputFile: new URL('output/baseline-naive.html', import.meta.url),
+    promptText: buildNaiveMealPlanPrompt(placeholderInputs),
 });
 
 console.log('\n--- Engineered prompt ---');
@@ -45,6 +50,7 @@ const engineeredResults = await evaluator.runEvaluation({
     extraCriteria,
     jsonOutputFile: new URL('output/baseline-engineered.json', import.meta.url),
     htmlOutputFile: new URL('output/baseline-engineered.html', import.meta.url),
+    promptText: buildEngineeredMealPlanPrompt(placeholderInputs),
 });
 
 console.log(`\nNaive average:      ${average(naiveResults.map((result) => result.score))}`);

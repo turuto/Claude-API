@@ -26,6 +26,15 @@ async function runPrompt(promptInputs) {
     return chat(messages);
 }
 
+// Placeholder values, not a real test case — just so the report can show the prompt
+// template without needing an extra API call to fill it in with real data.
+const promptText = buildEngineeredMealPlanPrompt({
+    height: '{height}',
+    weight: '{weight}',
+    goal: '{goal}',
+    restrictions: '{restrictions}',
+});
+
 await evaluator.runEvaluation({
     runPromptFunction: runPrompt,
     datasetFile: new URL('output/dataset.json', import.meta.url),
@@ -35,4 +44,5 @@ await evaluator.runEvaluation({
 - Meals with exact foods, portions, and timing`,
     jsonOutputFile: new URL('output/output.json', import.meta.url),
     htmlOutputFile: new URL('output/output.html', import.meta.url),
+    promptText,
 });

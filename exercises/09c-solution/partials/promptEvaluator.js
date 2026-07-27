@@ -70,7 +70,7 @@ export class PromptEvaluator {
         return { output, testCase, score: modelGrade.score, reasoning: modelGrade.reasoning };
     }
 
-    async runEvaluation({ runPromptFunction, datasetFile, extraCriteria, jsonOutputFile, htmlOutputFile }) {
+    async runEvaluation({ runPromptFunction, datasetFile, extraCriteria, jsonOutputFile, htmlOutputFile, promptText }) {
         const dataset = JSON.parse(await readFile(datasetFile, 'utf-8'));
 
         const logProgress = createProgressLogger('Graded', dataset.length);
@@ -84,7 +84,7 @@ export class PromptEvaluator {
 
         await mkdir(new URL('.', jsonOutputFile), { recursive: true });
         await writeFile(jsonOutputFile, JSON.stringify(results, null, 2));
-        await writeFile(htmlOutputFile, generatePromptEvaluationReport(results));
+        await writeFile(htmlOutputFile, generatePromptEvaluationReport(results, promptText));
 
         return results;
     }

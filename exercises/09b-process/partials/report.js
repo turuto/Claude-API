@@ -1,6 +1,13 @@
 import { average } from './mathUtils.js';
 
-export function generatePromptEvaluationReport(results) {
+// The prompt preview often contains literal XML tags (e.g. <athlete_information>) as part
+// of the prompt engineering technique being demonstrated — inserted unescaped, a browser
+// would swallow those as unrecognized markup instead of displaying them as visible text.
+function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+export function generatePromptEvaluationReport(results, promptText) {
     const scores = results.map((result) => result.score);
     const totalTests = results.length;
     const avgScore = scores.length ? average(scores) : 0;
@@ -133,6 +140,27 @@ export function generatePromptEvaluationReport(results) {
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        .prompt-preview {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 12px 0 20px;
+        }
+        .prompt-preview summary {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .prompt-preview pre {
+            margin: 10px 0 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
         td {
             width: 20%;
         }
@@ -144,6 +172,14 @@ export function generatePromptEvaluationReport(results) {
 <body>
     <div class="header">
         <h1>Prompt Evaluation Report</h1>
+        ${
+            promptText
+                ? `<details class="prompt-preview">
+            <summary>View prompt</summary>
+            <pre>${escapeHtml(promptText)}</pre>
+        </details>`
+                : ''
+        }
         <div class="summary-stats">
             <div class="stat-box">
                 <div>Total Test Cases</div>

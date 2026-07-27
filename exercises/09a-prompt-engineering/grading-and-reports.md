@@ -60,3 +60,23 @@ adapted to render untrusted content.
 `runEvaluation` writes this alongside a plain `output.json` (the same
 `results` array 07/08 already returned) — the JSON is for feeding back
 into more tooling, the HTML is for a human to skim.
+
+## The prompt preview, and why it needs escaping
+
+`generatePromptEvaluationReport(results, promptText)` takes an optional
+second argument rendered as a `<pre class="prompt-preview">` block right
+below the title, in the same monospace styling as the `output` column —
+so a reader can see exactly what prompt produced the results without
+opening `index.js`. Each `index.js` builds `promptText` by calling its own
+prompt-building function with placeholder values (`'{height}'`,
+`'{weight}'`, etc.) instead of a real test case's data, purely for
+display — no extra API call needed to "fill in" a preview.
+
+Unlike the other unescaped fields mentioned above, `promptText` genuinely
+needs escaping: this exercise's whole point is prompts that use literal
+XML tags like `<athlete_information>`, and inserted raw, a browser treats
+those as actual (unrecognized) markup rather than visible text — the tags
+would silently vanish from the rendered page instead of showing up in the
+preview. `escapeHtml` (`&` → `&amp;`, `<` → `&lt;`, `>` → `&gt;`) fixes
+that specifically for `promptText`, without touching the rest of the
+report's existing (documented) non-escaping behavior.
