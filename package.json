@@ -6,7 +6,7 @@
     "scripts": {
         "00": "node exercises/00-hello-claude/index.js",
         "01": "node exercises/01-user-input/index.js",
-        "02": "node exercises/02-conversation/index.js",
+        "02": "node exercises/02b-conversation-claude/index.js",
         "02b": "node exercises/02-conversation-claude/index.js",
         "03": "node exercises/03-system-prompts/index.js",
         "04": "node exercises/04-response-streaming/index.js",
