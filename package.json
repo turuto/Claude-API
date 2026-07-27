@@ -24,6 +24,7 @@
         "09d": "node exercises/09d-json-exercise/index.js",
         "10a": "node exercises/10a-tools-current-datetime/index.js",
         "10b": "node exercises/10b-tools-handling-messageBlocks/index.js",
+        "10c": "node exercises/10c-tools-messageBlocks-utilFunctions/index.js",
         "10z": "node exercises/10z-tools-add-duration/index.js",
         "format": "prettier --write ."
     },

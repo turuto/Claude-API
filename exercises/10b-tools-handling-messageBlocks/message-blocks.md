@@ -74,3 +74,29 @@ This is still only steps 1–3 of [[tool-use-and-schemas]]'s 5-step
 breakdown (write the function, write the schema, call Claude with it).
 Steps 4–5 — actually running `get_current_datetime` and sending its result
 back as a `tool_result` block so Claude can finish answering — are next.
+
+## `block.name` and the function are only linked by convention — so far
+
+Nothing in this exercise ever calls `getCurrentDatetime()`. Look closely and
+the only things that happen with the tool are: describing it to Claude via
+`getCurrentDatetimeSchema`, and printing whatever comes back. A `tool_use`
+block's `name` is just the string `'get_current_datetime'` — the same label
+used in the schema, but there's no framework wiring that string to the
+actual `getCurrentDatetime` function. They're two independent identifiers
+(one snake_case for the wire format, one camelCase for JS) that happen to
+refer to the same concept, kept in sync by hand, not by any code that
+enforces it.
+
+Claude *asking* for a tool by name doesn't make it run — dispatching
+`block.name` to the real function is a step this exercise stops short of.
+That's exactly what `10c-tools-messageBlocks-utilFunctions` adds, with a
+`TOOL_FUNCTIONS` lookup table keyed by that same snake_case name:
+
+```js
+const TOOL_FUNCTIONS = {
+    get_current_datetime: (input) => getCurrentDatetime(input.date_format),
+};
+```
+
+That's the first point in this arc where the schema's `name` string is used
+at runtime to call code, rather than just being logged for a human to read.
