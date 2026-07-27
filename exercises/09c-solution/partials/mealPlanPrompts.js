@@ -10,8 +10,8 @@ export function buildNaiveMealPlanPrompt(promptInputs) {
 - Dietary restrictions: ${promptInputs.restrictions}`;
 }
 
-// The engineered prompt: guidelines plus a fully worked sample input/output pair, applying
-// prompt engineering techniques on top of the naive baseline above.
+// The engineered prompt: guidelines, a process-steps section, and a fully worked sample
+// input/output pair, applying prompt engineering techniques on top of the naive baseline above.
 export function buildEngineeredMealPlanPrompt(promptInputs) {
     return `Generate a one-day meal plan for an athlete that meets their dietary restrictions.
 
@@ -21,6 +21,13 @@ export function buildEngineeredMealPlanPrompt(promptInputs) {
 - Goal: ${promptInputs.goal}
 - Dietary restrictions: ${promptInputs.restrictions}
 </athlete_information>
+
+Before writing the plan, work through these steps:
+1. Estimate this athlete's total daily calorie need from their height, weight, and goal.
+2. Split that calorie target into protein, fat, and carb grams.
+3. List which foods are off-limits given their dietary restrictions, so you don't use them below.
+
+Then write the final meal plan using those numbers.
 
 Guidelines:
 1. Include accurate daily calorie amount

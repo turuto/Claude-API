@@ -15,7 +15,7 @@ const dataset = await evaluator.generateDataset({
     },
     outputFile: new URL('output/dataset.json', import.meta.url),
     // Keep this low during iteration — raise it for a final, more confident validation pass.
-    numCases: 1,
+    numCases: 3,
 });
 
 // See partials/mealPlanPrompts.js for the prompt text itself, and compare-baseline.js for
