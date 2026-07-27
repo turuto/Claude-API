@@ -21,6 +21,7 @@
         "09b": "node exercises/09b-process/index.js",
         "09c-solution": "node exercises/09c-solution/index.js",
         "09c-compare": "node exercises/09c-solution/compare-baseline.js",
+        "09d": "node exercises/09d-json-exercise/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
