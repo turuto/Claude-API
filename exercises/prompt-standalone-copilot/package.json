@@ -1,0 +1,14 @@
+{
+    "name": "prompt-standalone-copilot",
+    "version": "1.0.0",
+    "description": "Standalone prompt engineering + evaluation demo, running on the GitHub Copilot CLI instead of the Claude API",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "@github/copilot-sdk": "^1.0.8"
+    }
+}
