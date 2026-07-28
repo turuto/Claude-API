@@ -37,15 +37,17 @@ inside a **user**-role message:
   explicitly since it's the mechanism a tool that *can* fail would use to
   tell Claude the call didn't succeed.
 
-## Handling more than one tool_use block — deferred, not solved here
+## Handling more than one tool_use block — deferred to 10e
 
 Claude can ask for multiple tools — or the same tool more than once — in a
 single response (e.g. "what's 10+10 and what's 30+30?" against two
-different tools), and there's a dedicated upcoming lesson on exactly that.
-So `index.js` deliberately keeps `.find()` here rather than reaching for
-`.filter()` + `.map()` early — this exercise assumes a single `tool_use`
-block per response, and the multi-tool case gets its own exercise once
-that lesson's been covered, rather than solving it ahead of time.
+different tools). `index.js` deliberately keeps `.find()` here rather than
+reaching for `.filter()` + `.map()` early — this exercise assumes a single
+`tool_use` block per response. [[loop-multiple-tools]] in
+`10e-tools-loopMultipleTools` covers that case, plus the related-but-distinct
+problem of a single question needing *several tools in sequence* (not just
+several blocks in one response) via a loop that keeps going until Claude
+stops asking for tools.
 
 Even with `.find()`, the lesson's Python version hardcoding
 `response.content[1]` (assuming block 0 is text and block 1 is `tool_use`)
