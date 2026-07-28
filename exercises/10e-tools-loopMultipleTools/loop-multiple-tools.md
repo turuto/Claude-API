@@ -1,5 +1,28 @@
 # The multi-turn tool loop
 
+## Matches the lesson's "Tool Use Improvements" checklist
+
+The lesson frames this step as four improvements over `10d`, all present in
+`index.js`:
+
+- **`add_user_message`/`add_assistant_message` handle multiple message
+  blocks** — `addUserMessage`/`addAssistantMessage` accept a string, a
+  content-block array, or a full API response object.
+- **`chat` accepts a list of tools and returns the full message, not
+  text** — `chat(tools, options)` forwards `tools` to `messages.create` and
+  returns the whole `response`. It also picks up the lesson's `system`/
+  `temperature`/`stopSequences` options (only added to the request if
+  actually provided, matching the lesson's `if tools:`/`if system:`
+  guards), even though this file's demo doesn't exercise them yet — `chat`
+  is shaped to match where the lesson takes it, not just today's two
+  questions.
+- **A `text_from_message` function extracts all text blocks from a
+  message** — `textFromMessage`.
+- **Support for multiple tool calls in a conversation** — the `while` loop
+  in `runConversation` keeps going across turns, and
+  `toolUseBlocks.filter(...).map(runTool)` also covers several `tool_use`
+  blocks arriving in a single turn.
+
 [[tool-results]] (in `10d`) handled exactly one tool_use → tool_result round
 trip and stopped. That's not enough once a question needs *more than one*
 tool before Claude has enough to answer — "What day is 103 days from

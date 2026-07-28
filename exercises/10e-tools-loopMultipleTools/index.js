@@ -214,16 +214,30 @@ function addAssistantMessage(message) {
     messages.push({ role: 'assistant', content });
 }
 
-// Same as 10c/10d's chat(): takes `tools`, returns the whole response so callers can read
-// response.stop_reason.
-async function chat(tools) {
-    const response = await client.messages.create({
+// Same as 10c/10d's chat(), extended to match the lesson's own chat() growing a system/
+// temperature/stopSequences signature. Not exercised by this file's demo yet — nothing
+// here passes a system prompt or custom temperature — but included so chat() matches the
+// lesson's shape rather than only what today's two questions happen to need. `tools` and
+// `system` are only added to the request if actually provided, same as the lesson's
+// `if tools:` / `if system:` guards.
+async function chat(tools, { system, temperature = 1.0, stopSequences = [] } = {}) {
+    const params = {
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         messages,
-        tools,
-    });
+        temperature,
+        stop_sequences: stopSequences,
+    };
 
+    if (tools) {
+        params.tools = tools;
+    }
+
+    if (system) {
+        params.system = system;
+    }
+
+    const response = await client.messages.create(params);
     return response;
 }
 
