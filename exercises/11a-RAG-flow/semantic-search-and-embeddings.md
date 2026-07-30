@@ -9,7 +9,7 @@ through all the chunks and identify the ones that relate to what's being asked.
 ## Semantic search vs. keyword search
 
 The standard approach is **semantic search**. Keyword search looks for exact word matches;
-semantic search uses text embeddings to capture the *meaning* of both the question and each
+semantic search uses text embeddings to capture the _meaning_ of both the question and each
 chunk, so it can match on what a chunk is actually about rather than which literal words it
 contains.
 
