@@ -29,6 +29,7 @@
         "10e": "node exercises/10e-tools-loopMultipleTools/index.js",
         "10f": "node exercises/10f-tools-multiple-turns/index.js",
         "10g": "node exercises/10g-tools-streaming/index.js",
+        "10h": "node exercises/10h-textEditor-tool/index.js",
         "10z": "node exercises/10z-tools-add-duration/index.js",
         "format": "prettier --write ."
     },
