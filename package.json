@@ -32,7 +32,9 @@
         "10h": "node exercises/10h-textEditor-tool/index.js",
         "10i": "node exercises/10i-webSearch-tool/index.js",
         "10z": "node exercises/10z-tools-add-duration/index.js",
-        "11a": "node exercises/11a-RAG-flow/index.js",
+        "11a": "node exercises/11a-RAG-chunking/index.js",
+        "11b": "node exercises/11b-RAG-embeddings/index.js",
+        "11c": "node exercises/11c-RAG-completeFlow/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
