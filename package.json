@@ -38,6 +38,8 @@
         "11d": "node exercises/11d-RAG-BM25-lexicalSearch/index.js",
         "11e": "node exercises/11e-RAG-multiIndexSearch/index.js",
         "12": "node exercises/12-extendedThinking/index.js",
+        "13": "node exercises/13-images/index.js",
+        "14": "node exercises/14-pdf/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
