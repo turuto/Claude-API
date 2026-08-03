@@ -37,6 +37,7 @@
         "11c": "node exercises/11c-RAG-completeFlow/index.js",
         "11d": "node exercises/11d-RAG-BM25-lexicalSearch/index.js",
         "11e": "node exercises/11e-RAG-multiIndexSearch/index.js",
+        "12": "node exercises/12-extendedThinking/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
