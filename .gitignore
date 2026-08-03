@@ -29,5 +29,9 @@ exercises/14-pdf/pdfs/*
 # itself is committed as a fixture so this exercise runs standalone right after a clone
 exercises/15-citations/output/
 
+# files Claude generates via code execution (e.g. the churn-analysis plot) — regenerated fresh
+# on every run; streaming.csv itself is committed as a fixture
+exercises/17-codeExecution-fileAPI/output/
+
 # personal local Claude Code permissions, not shared project config
 .claude/settings.local.json

@@ -42,6 +42,7 @@
         "14": "node exercises/14-pdf/index.js",
         "15": "node exercises/15-citations/index.js",
         "16": "node exercises/16-prompt-caching/index.js",
+        "17": "node exercises/17-codeExecution-fileAPI/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
