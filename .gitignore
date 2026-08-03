@@ -17,14 +17,17 @@ exercises/09d-json-exercise/output/
 # script regenerates — it's committed as a fixture so that exercise can run
 # standalone right after a clone, without needing 06 run first.
 
-# personal test images for the vision exercise — not part of the repo
-exercises/13-images/images/*
-!exercises/13-images/images/README.md
+# exercises/13-images/images/*.png are committed as fixtures (real property photos, run through
+# the fire-risk-assessment prompt) — this stray archive of the same photos is not
 exercises/13-images/images.zip
 
 # personal test PDF for the PDF-processing exercise — not part of the repo
 exercises/14-pdf/pdfs/*
 !exercises/14-pdf/pdfs/README.md
+
+# generated HTML report for the citations exercise (regenerated fresh on every run) — earth.pdf
+# itself is committed as a fixture so this exercise runs standalone right after a clone
+exercises/15-citations/output/
 
 # personal local Claude Code permissions, not shared project config
 .claude/settings.local.json

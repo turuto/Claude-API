@@ -124,31 +124,38 @@ const MEDIA_TYPES = {
     '.webp': 'image/webp',
 };
 
-// The image isn't committed to this repo (see images/README.md) — this resolves whichever
-// extension the user actually dropped in.
-function findImageFile(baseName) {
-    for (const ext of Object.keys(MEDIA_TYPES)) {
-        const filePath = path.join(IMAGES_DIR, `${baseName}${ext}`);
-        if (fs.existsSync(filePath)) return filePath;
-    }
-    throw new Error(`No image found for "${baseName}" in ${IMAGES_DIR} — see images/README.md for what to add.`);
+function listImageFiles() {
+    return fs
+        .readdirSync(IMAGES_DIR)
+        .filter((file) => Object.keys(MEDIA_TYPES).includes(path.extname(file).toLowerCase()))
+        .sort();
 }
 
 // --- The notebook's TODO: read image data, feed into Claude -----------------------------
 // Python's open(...).read() + base64.standard_b64encode(...).decode('utf-8') becomes
 // fs.readFileSync(...).toString('base64') here — same bytes, same encoding. The image block
-// and the text block sit side by side in one user message.
+// and the text block sit side by side in one user message. images/ holds several real
+// property photos rather than one fixed filename, so the same assessment prompt runs once
+// per photo, as its own independent conversation (messages reset between each).
 
-const imagePath = findImageFile('satellite');
-const mediaType = MEDIA_TYPES[path.extname(imagePath).toLowerCase()];
-const imageData = fs.readFileSync(imagePath).toString('base64');
+const imageFiles = listImageFiles();
+if (imageFiles.length === 0) {
+    throw new Error(`No images found in ${IMAGES_DIR}.`);
+}
 
-addUserMessage([
-    { type: 'image', source: { type: 'base64', media_type: mediaType, data: imageData } },
-    { type: 'text', text: prompt },
-]);
+for (const file of imageFiles) {
+    const mediaType = MEDIA_TYPES[path.extname(file).toLowerCase()];
+    const imageData = fs.readFileSync(path.join(IMAGES_DIR, file)).toString('base64');
 
-const response = await chat();
-addAssistantMessage(response);
+    messages.length = 0;
+    addUserMessage([
+        { type: 'image', source: { type: 'base64', media_type: mediaType, data: imageData } },
+        { type: 'text', text: prompt },
+    ]);
 
-console.log(textFromMessage(response));
+    const response = await chat();
+    addAssistantMessage(response);
+
+    console.log(`=== ${file} ===`);
+    console.log(textFromMessage(response) + '\n');
+}

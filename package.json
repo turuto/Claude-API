@@ -40,6 +40,7 @@
         "12": "node exercises/12-extendedThinking/index.js",
         "13": "node exercises/13-images/index.js",
         "14": "node exercises/14-pdf/index.js",
+        "15": "node exercises/15-citations/index.js",
         "format": "prettier --write ."
     },
     "keywords": [],
